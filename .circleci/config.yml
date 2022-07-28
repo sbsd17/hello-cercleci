@@ -19,14 +19,14 @@ jobs:
           command: "echo Hello, World!"
   print-hello:
     docker:
-      - image: cimg/node
+      - image: cimg/base:stable
     steps:
       - run:
           name: "Print hello"
           command: "echo Hello"
   print-world:
     docker:
-      - image: cimg/node
+      - image: cimg/base:stable
     steps:
       - run:
           name: "Print world!"
