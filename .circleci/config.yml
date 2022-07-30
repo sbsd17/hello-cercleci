@@ -21,9 +21,9 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      run:
-        name: "Print project environment variable"
-        command: echo ${USR_NAME}
+      - run:
+          name: "Print project environment variable"
+          command: echo ${USR_NAME}
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
