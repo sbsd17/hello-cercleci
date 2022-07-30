@@ -22,7 +22,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       run:
-        name: "Print project environment variable",
+        name: "Print project environment variable"
         command: echo ${USR_NAME}
 
 # Invoke jobs via workflows
