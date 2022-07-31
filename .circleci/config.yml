@@ -18,4 +18,4 @@ jobs:
 workflows:
   sample-workflow:
     jobs:
-      - failure-handling
+      - test-job
