@@ -8,9 +8,8 @@ defaults: &defaults
 jobs:
   test-job:
     <<: *defaults
-    description: "A very simple command for demonstration purposes"
     steps:
-      - run: return 1
+      - run: exit 1
       - run:
         name: job execution returned 1
         command: echo "Test failure handling was a success"
