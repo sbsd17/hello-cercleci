@@ -11,9 +11,9 @@ jobs:
     steps:
       - run: exit 1
       - run:
-        name: job execution returned 1
-        command: echo "Test failure handling was a success"
-        when: on_fail
+          name: job execution returned 1
+          command: echo "Test failure handling was a success"
+          when: on_fail
 
 workflows:
   sample-workflow:
