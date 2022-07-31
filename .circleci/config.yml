@@ -23,9 +23,9 @@ jobs:
     steps:
       - run:
           name: "Save hello world output"
-          command: echo "text to output here" > output.txt
+          command: echo "text to output here" > workpace/output.txt
       - persist_to_workspace:
-          root:
+          root: workpace
           paths:
             - output.txt
       - run:
