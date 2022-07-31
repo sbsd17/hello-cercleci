@@ -6,10 +6,14 @@ defaults: &defaults
   working_directory: ~/
 
 commands:
-  print-pipeline-id :
+  failure-handling:
     description: "A very simple command for demonstration purposes"
     steps:
-      - run: echo $CIRCLE_WORKFLOW_ID
+      - run: return 1
+      - run:
+        name: job execution returned 1
+        command: echo "Test failure handling was a success"
+        when: on_fail 
 
 jobs:
   test-job:
@@ -18,6 +22,6 @@ jobs:
       - print-pipeline-id
 
 workflows:
-  say-hello-workflow:
+  sample-workflow:
     jobs:
-      - test-job
+      - failure-handling
