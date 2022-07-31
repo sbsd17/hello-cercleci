@@ -5,21 +5,16 @@ defaults: &defaults
     - image: cimg/base:stable
   working_directory: ~/
 
-commands:
-  failure-handling:
+jobs:
+  test-job:
+    <<: *defaults
     description: "A very simple command for demonstration purposes"
     steps:
       - run: return 1
       - run:
-          name: job execution returned 1
-          command: echo "Test failure handling was a success"
-          when: on_fail 
-
-jobs:
-  test-job:
-    <<: *defaults
-    steps:
-      - print-pipeline-id
+        name: job execution returned 1
+        command: echo "Test failure handling was a success"
+        when: on_fail
 
 workflows:
   sample-workflow:
