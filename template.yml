@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: EC2 template for cicd exercise4
-Parameters:
 Resources:
   SG:
     Type: AWS::EC2::SecurityGroup
