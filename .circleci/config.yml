@@ -22,6 +22,7 @@ jobs:
       - image: cimg/python:3.10.6
     steps:
       - checkout
+      - run: python --version
       - add_ssh_keys:
           fingerprints:
             - "51:14:d5:4e:fa:d5:d3:1b:7b:5b:aa:fb:a9:0d:ee:ca"
