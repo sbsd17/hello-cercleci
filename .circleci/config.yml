@@ -1,21 +1,27 @@
 version: 2.1
-
 defaults: &defaults
   docker:
     - image: cimg/base:stable
   working_directory: ~/
-
 jobs:
-  test-job:
+  job1:
     <<: *defaults
     steps:
-      - run: exit 1
+      - run: checkout
+      - run: echo "hello world"
+  create-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - run: checkout
       - run:
-          name: job execution returned 1
-          command: echo "Test failure handling was a success"
-          when: on_fail
-
+          name: create cloudformation stack
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name cicd-stack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --region us-east-1
 workflows:
-  sample-workflow:
+  workflow1:
     jobs:
-      - test-job
+      - create-infrastructure
