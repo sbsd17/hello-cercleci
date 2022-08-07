@@ -19,7 +19,7 @@ jobs:
   configure-infrastructure:
     docker:
       # - image: python:3.7-alpine3.11
-      - image: cimg/python:3.10.6
+      - image: cimg/python:3.7
     steps:
       - checkout
       - run: python --version
