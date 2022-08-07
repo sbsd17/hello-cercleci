@@ -3,6 +3,13 @@ defaults: &defaults
   docker:
     - image: cimg/base:stable
   working_directory: ~/
+commands:
+  destroy-environment:
+    steps:
+      - run:
+          name: destroy environment
+          command: |
+            aws cloudformation delete-stack --stack-name cicd-stack-${CIRCLE_WORKFLOW_ID:0:5}
 jobs:
   create-infrastructure:
     docker:
@@ -42,16 +49,12 @@ jobs:
       - run:
           name: smoke test
           command: |
-            URL="https://blog.udacity.com/"
-            if curl -s --head ${URL}
-            then
-              return 0
-            else
-              return 1
-            fi
+            return 1
+      - destroy-environment
+        when: on_fail
 workflows:
   workflow1:
     jobs:
-      # - create-infrastructure
+      - create-infrastructure
       # - configure-infrastructure
-      - smoke-test
+      # - smoke-test
