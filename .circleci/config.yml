@@ -31,11 +31,27 @@ jobs:
           command: |
             apk add --update ansible
       - run:
-          name: run playbook and configure server
+          name: configure server
           command: |
             ansible-playbook -i inventory main.yml
+  smoke-test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: apk add --update curl
+      - run:
+          name: smoke test
+          command: |
+            URL="https://blog.udacity.com/"
+            if curl -s --head ${URL}
+            then
+              return 0
+            else
+              return 1
+            fi
 workflows:
   workflow1:
     jobs:
       # - create-infrastructure
-      - configure-infrastructure
+      # - configure-infrastructure
+      - smoke-test
