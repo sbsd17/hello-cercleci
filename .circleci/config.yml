@@ -55,5 +55,10 @@ workflows:
   workflow1:
     jobs:
       - create-infrastructure
-      # - configure-infrastructure
-      - smoke-test
+      # - configure-infrastructure:
+      #     requires:
+      #       - create-infrastructure
+      - smoke-test:
+          requires:
+            - create-infrastructure
+            # - configure-infrastructure
