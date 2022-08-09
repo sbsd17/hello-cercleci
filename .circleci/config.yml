@@ -64,6 +64,47 @@ jobs:
             --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:7} \
             --parameter-overrides BucketName="bucket-${CIRCLE_WORKFLOW_ID:0:7}"
       - run: aws s3 sync . s3://bucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
+  get-last-deployment-id:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: yum install -y tar gzip
+      - run:
+          name: fetch and save old pipeline Id (bucket name) for the last release
+          command: |
+            aws cloudformation \
+            list-exports --query "Exports[?Name==\`PipelineId\`].Value" \
+            --no-paginate --output text > ~/textfile.txt
+      - persist_to_workspace:
+          root: ~/
+          path:
+            - textfile.txt
+  promote-to-production:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      run:
+        name: execute cloudfront.yml
+        command: |
+          aws cloudformation deploy \
+          --template-file cloudfront.yml \
+          --stack-name production-distro \
+          --parameter-overrides PipelineId="bucket-${CIRCLE_WORKFLOW_ID:0:7}"
+  clean-up-old-front-end:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: yum install -y tar gzip
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: destroy previous s3 bucket and cloudformation stack
+          command: |
+            export OldBucketId=$(cat ~/textfile.txt)
+            aws s3 rm "s3://${OldBucketId}" --recursive
 workflows:
   workflow1:
     jobs:
@@ -76,3 +117,12 @@ workflows:
             # - create-infrastructure
             # - configure-infrastructure
       - create-and-deploy-frontend
+      - promote-to-production:
+          requires:
+            - create-and-deploy-frontend
+      - get-last-deployment-id
+      - clean-up-old-front-end:
+          requires:
+            - get-last-deployment-id
+            - promote-to-production
+
